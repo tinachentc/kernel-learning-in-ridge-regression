@@ -1,3 +1,5 @@
+'''Main function'''
+
 import torch
 import numpy as np
 from trainSigArm_Gau import *

@@ -1,4 +1,4 @@
-'''Kernel function lab with Mahalanobis distance'''
+'''Lab of kernel functions with introduced Mahalanobis distance'''
 
 import torch
 

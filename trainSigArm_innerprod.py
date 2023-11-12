@@ -1,4 +1,4 @@
-'''Gradient function and PGD algorithm (other inner product kernels: linear, square, cubic)'''
+'''Gradient function and PGD algorithm (other inner product kernels: linear, cubic)'''
 
 import numpy as np
 import torch
