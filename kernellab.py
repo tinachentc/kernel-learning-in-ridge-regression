@@ -22,7 +22,7 @@ def euclidean_distances(samples, centers, squared=True):
     return distances
 
 def euclidean_distances_M(samples, centers, M, squared=True):
-    
+
     samples_norm = (samples @ M)  * samples
     samples_norm = torch.sum(samples_norm, dim=1, keepdim=True)
 

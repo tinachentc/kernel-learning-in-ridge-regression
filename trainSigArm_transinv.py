@@ -1,4 +1,4 @@
-'''Gradient function and PGD algorithm (other translation invariant kernels: inverse multiquadric, Matern)'''
+'''Gradient function and PGD algorithm (other translation invariant kernels: inverse multiquadric and Matern)'''
 
 import numpy as np
 import torch
