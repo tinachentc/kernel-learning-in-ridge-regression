@@ -63,7 +63,7 @@ def get_grads(reg, X, Y, L, P, batch_size, unfold=0):
 
 def trainSig(X_train, y_train, X_test, y_test, M, d0,
         iters, batch_size, reg, lr0,
-        alpha, beta, X_val=None, y_val=None, classification=0, unfold=0):
+        alpha, beta, tol, X_val=None, y_val=None, classification=0, unfold=0):
     L = 1
     n, d = X_train.shape
     mm, d = X_test.shape
@@ -142,7 +142,7 @@ def trainSig(X_train, y_train, X_test, y_test, M, d0,
            print(lr)
 
         print(norm(M-M0, 'fro')/lr)
-        if lr == 0 or norm(M-M0, 'fro')/lr < 1e-3:
+        if lr == 0 or norm(M-M0, 'fro')/lr < tol:
             obj_seq[i+1] = obj_seq[i]
             terr_seq[i+1] = terr_seq[i]
             err_seq[i+1] = err_seq[i]
@@ -224,7 +224,7 @@ def get_grads_diag(reg, X, Y, L, P, batch_size):
 
 def trainSig_diag(X_train, y_train, X_test, y_test, M, d0,
         iters, batch_size, reg, lr0,
-        alpha, beta, X_val=None, y_val=None, classification=0):
+        alpha, beta, tol, X_val=None, y_val=None, classification=0):
     L = 1
     n, d = X_train.shape
     mm, d = X_test.shape
@@ -297,7 +297,7 @@ def trainSig_diag(X_train, y_train, X_test, y_test, M, d0,
            print(lr)
 
         print(norm(M-M0, 2)/lr)
-        if lr == 0 or norm(M-M0, 2)/lr < 1e-3:
+        if lr == 0 or norm(M-M0, 2)/lr < tol:
             obj_seq[i+1] = obj_seq[i]
             terr_seq[i+1] = terr_seq[i]
             err_seq[i+1] = err_seq[i]
