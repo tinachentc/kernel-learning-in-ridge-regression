@@ -13,22 +13,51 @@
 - scikit-learn==1.2.2
 
 ## Example code:
-1. for simulation
+1. for existing data
 ```bash
-python3 exprep0.py --s 1 --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1
-                   --n 300 --d 50 --args 1
-python3 exprep0.py --s 1 --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2,2.2,2.4,2.6,2.8,3
-                   --n 300 --d 50 --args 3
-python3 exprep0.py --s 1 --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2,2.2,2.4,2.6,2.8,3
-                   --n 300 --d 50 --args 4 --alpha 0.0001
-```
-2. for existing data
-```bash
-# --data train,test
+# see Arguments --data for detailed information on using your own data
+# for training and testing (--data train path,test path)
 python3 exprep0.py --l 1,0.5 --data ./example simulated data/example_train.csv,./example simulated data/example_test.csv
-# --data train,test,validate
+# for training, validation and testing (--data train path,test path,validate path)
 python3 exprep0.py --l 1,0.5 --data ./example simulated data/example_train.csv,./example simulated data/example_test.csv,./example simulated data/example_test.csv
 ```
+
+2. for simulation
+```bash
+# see arguments --s for random seeds to reproduce the results in paper and other arguments for detailed information
+# Figures 1 and 2
+python3 exprep0.py --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1
+                   --n 300 --d 50 --args 1
+python3 exprep0.py --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2,2.2,2.4,2.6,2.8,3
+                   --n 300 --d 50 --args 3
+python3 exprep0.py --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2,2.2,2.4,2.6,2.8,3
+                   --n 300 --d 50 --args 4 --alpha 0.0001
+
+# Figure 3
+python3 exprep0.py --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1
+                   --n 300 --d 50 --args 1 --rho 0.5
+python3 exprep0.py --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1
+                   --n 300 --d 50 --args 2 --rho 0.5 --alpha 0.0001
+python3 exprep0.py --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2,2.2,2.4,2.6,2.8,3
+                   --n 300 --d 50 --args 3 --rho 0.5 --alpha 0.0001
+python3 exprep0.py --l 0.2,0.4,0.6,0.8,1,1.2,1.4,1.6,1.8,2,2.2,2.4,2.6,2.8,3
+                   --n 300 --d 50 --args 4 --rho 0.5 --alpha 0.0001
+
+# Figure 4
+python3 exprep0.py --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1 
+                   --n 300 --d 50 --args 3 --xdis 2 --alpha 0.0001
+python3 exprep0.py --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2,2.2,2.4,2.6,2.8,3
+                   --n 300 --d 50 --args 3 --xdis 3 --rho 0.5
+
+# Figure 5
+python3 exprep0.py --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1 
+                   --n 300 --d 50 --args 5
+
+# Figure 6
+python3 exprep0.py --l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1 
+                   --n 300 --d 50 --args 1 --ker linear
+```
+
 
 Arguments:
 1. for data
