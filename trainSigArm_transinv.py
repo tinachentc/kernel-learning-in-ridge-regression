@@ -6,6 +6,7 @@ from scipy.linalg import eigh
 from numpy.linalg import solve, inv, norm
 import kernellab
 from tqdm import tqdm
+from sklearn.metrics import accuracy_score
 
 # inverse multiquadric kernel
 def get_grads_IMQ(reg, X, Y, L, P, batch_size, unfold=0):
@@ -65,10 +66,12 @@ def get_grads_IMQ(reg, X, Y, L, P, batch_size, unfold=0):
 
 def trainSig_IMQ(X_train, y_train, X_test, y_test, M, d0,
         iters, batch_size, reg, lr0,
-        alpha, beta, unfold=0):
+        alpha, beta, X_val=None, y_val=None, classification=0, unfold=0):
     L = 1
     n, d = X_train.shape
-    m, d = X_test.shape
+    mm, d = X_test.shape
+    if X_val is not None and y_val is not None:
+        m, d = X_val.shape
 
     U = np.eye(d, dtype='float32')
     obj_seq = np.zeros(iters+1)
@@ -91,11 +94,16 @@ def trainSig_IMQ(X_train, y_train, X_test, y_test, M, d0,
     terr_seq[i] = np.sqrt(np.mean(np.square(preds - y_train.numpy())))
     print("Round " + str(i) + " Train RMSE: ", terr_seq[i])
 
-    # testing err
-    K_test = kernellab.IMQ_M(X_train, X_test, L, torch.from_numpy(M)).numpy()
-    preds = (sol @ K_test).T + np.ones((m, 1)) * csol
-    err_seq[i] = np.sqrt(np.mean(np.square(preds - y_test.numpy())))
-    print("Round " + str(i) + " RMSE: ", err_seq[i])
+    # validation err
+    if X_val is not None and y_val is not None:
+        K_val = kernellab.IMQ_M(X_train, X_val, L, torch.from_numpy(M)).numpy()
+        preds = (sol @ K_val).T + np.ones((m, 1)) * csol
+        if classification:
+            err_seq[i] = 1. - accuracy_score(preds > 0.5, y_val.numpy())
+            print("Round " + str(i) + " Val Acc: ", 1. - err_seq[i])
+        else:
+            err_seq[i] = np.sqrt(np.mean(np.square(preds - y_val.numpy())))
+            print("Round " + str(i) + " Val RMSE: ", err_seq[i])
 
     # objective function value
     obj = sol @ (K_train + reg * np.eye(n)) @ sol.T
@@ -161,18 +169,33 @@ def trainSig_IMQ(X_train, y_train, X_test, y_test, M, d0,
         terr_seq[i+1] = np.sqrt(np.mean(np.square(preds - y_train.numpy())))
         print("Round " + str(i+1) + " Train RMSE: ", terr_seq[i+1])
 
-        # testing err
-        K_test = kernellab.IMQ_M(X_train, X_test, L, torch.from_numpy(M)).numpy()
-        preds = (sol @ K_test).T + np.ones((m, 1)) * csol
-        err_seq[i+1] = np.sqrt(np.mean(np.square(preds - y_test.numpy())))
-        print("Round " + str(i+1) + " RMSE: ", err_seq[i+1])
+        # validation err
+        if X_val is not None and y_val is not None:
+            K_val = kernellab.IMQ_M(X_train, X_val, L, torch.from_numpy(M)).numpy()
+            preds = (sol @ K_val).T + np.ones((m, 1)) * csol
+            if classification:
+                err_seq[i+1] = 1. - accuracy_score(preds>0.5, y_val.numpy())
+                print("Round " + str(i+1) + " Val Acc: ", 1. - err_seq[i+1])
+            else:
+                err_seq[i+1] = np.sqrt(np.mean(np.square(preds - y_val.numpy())))
+                print("Round " + str(i+1) + " Val RMSE: ", err_seq[i+1])
 
         # objective function value
         obj = sol @ (K_train + reg * np.eye(n)) @ sol.T
         obj_seq[i+1] = obj[0, 0] * reg / n / 2
         print("Round " + str(i+1) + " Obj: ", obj_seq[i+1])
 
-    return M, obj_seq[0:i+2], terr_seq[0:i+2], err_seq[0:i+2], rank_seq[0:i+2]
+    # test err
+    K_test = kernellab.IMQ_M(X_train, X_test, L, torch.from_numpy(M)).numpy()
+    preds = (sol @ K_test).T + np.ones((mm, 1)) * csol
+    if classification:
+        test_err = 1. - accuracy_score(preds > 0.5, y_test.numpy())
+        print("Test Acc: ", 1. - test_err)
+    else:
+        test_err = np.sqrt(np.mean(np.square(preds - y_test.numpy())))
+        print("Test RMSE: ", test_err)
+
+    return test_err, M, obj_seq[0:i+2], terr_seq[0:i+2], err_seq[0:i+2], rank_seq[0:i+2]
 
 # Matern kernel
 def get_grads_MT(reg, X, Y, L, P, batch_size, unfold=0):
@@ -193,7 +216,7 @@ def get_grads_MT(reg, X, Y, L, P, batch_size, unfold=0):
         a = torch.from_numpy(a).float()
         diff = x.unsqueeze(1) - x.unsqueeze(0)
 
-        # for IMQ
+        # for MT
         K = kernellab.laplacian_M(x, x, L, P)
 
         # separate unfold cases
@@ -232,10 +255,12 @@ def get_grads_MT(reg, X, Y, L, P, batch_size, unfold=0):
 
 def trainSig_MT(X_train, y_train, X_test, y_test, M, d0,
         iters, batch_size, reg, lr0,
-        alpha, beta, unfold=0):
+        alpha, beta, X_val=None, y_val=None, classification=0, unfold=0):
     L = 1
     n, d = X_train.shape
-    m, d = X_test.shape
+    mm, d = X_test.shape
+    if X_val is not None and y_val is not None:
+        m, d = X_val.shape
 
     U = np.eye(d, dtype='float32')
     obj_seq = np.zeros(iters+1)
@@ -258,11 +283,16 @@ def trainSig_MT(X_train, y_train, X_test, y_test, M, d0,
     terr_seq[i] = np.sqrt(np.mean(np.square(preds - y_train.numpy())))
     print("Round " + str(i) + " Train RMSE: ", terr_seq[i])
 
-    # testing err
-    K_test = kernellab.Matern_M(X_train, X_test, L, torch.from_numpy(M)).numpy()
-    preds = (sol @ K_test).T + np.ones((m, 1)) * csol
-    err_seq[i] = np.sqrt(np.mean(np.square(preds - y_test.numpy())))
-    print("Round " + str(i) + " RMSE: ", err_seq[i])
+    # validation err
+    if X_val is not None and y_val is not None:
+        K_val = kernellab.Matern_M(X_train, X_val, L, torch.from_numpy(M)).numpy()
+        preds = (sol @ K_val).T + np.ones((m, 1)) * csol
+        if classification:
+            err_seq[i] = 1. - accuracy_score(preds > 0.5, y_val.numpy())
+            print("Round " + str(i) + " Val Acc: ", 1. - err_seq[i])
+        else:
+            err_seq[i] = np.sqrt(np.mean(np.square(preds - y_val.numpy())))
+            print("Round " + str(i) + " Val RMSE: ", err_seq[i])
 
     # objective function value
     obj = sol @ (K_train + reg * np.eye(n)) @ sol.T
@@ -328,15 +358,30 @@ def trainSig_MT(X_train, y_train, X_test, y_test, M, d0,
         terr_seq[i+1] = np.sqrt(np.mean(np.square(preds - y_train.numpy())))
         print("Round " + str(i+1) + " Train RMSE: ", terr_seq[i+1])
 
-        # testing err
-        K_test = kernellab.Matern_M(X_train, X_test, L, torch.from_numpy(M)).numpy()
-        preds = (sol @ K_test).T + np.ones((m, 1)) * csol
-        err_seq[i+1] = np.sqrt(np.mean(np.square(preds - y_test.numpy())))
-        print("Round " + str(i+1) + " RMSE: ", err_seq[i+1])
+        # validation err
+        if X_val is not None and y_val is not None:
+            K_val = kernellab.Matern_M(X_train, X_val, L, torch.from_numpy(M)).numpy()
+            preds = (sol @ K_val).T + np.ones((m, 1)) * csol
+            if classification:
+                err_seq[i+1] = 1. - accuracy_score(preds>0.5, y_val.numpy())
+                print("Round " + str(i+1) + " Val Acc: ", 1. - err_seq[i+1])
+            else:
+                err_seq[i+1] = np.sqrt(np.mean(np.square(preds - y_val.numpy())))
+                print("Round " + str(i+1) + " Val RMSE: ", err_seq[i+1])
 
         # objective function value
         obj = sol @ (K_train + reg * np.eye(n)) @ sol.T
         obj_seq[i+1] = obj[0, 0] * reg / n / 2
         print("Round " + str(i+1) + " Obj: ", obj_seq[i+1])
 
-    return M, obj_seq[0:i+2], terr_seq[0:i+2], err_seq[0:i+2], rank_seq[0:i+2]
+    # test err
+    K_test = kernellab.Matern_M(X_train, X_test, L, torch.from_numpy(M)).numpy()
+    preds = (sol @ K_test).T + np.ones((mm, 1)) * csol
+    if classification:
+        test_err = 1. - accuracy_score(preds > 0.5, y_test.numpy())
+        print("Test Acc: ", 1. - test_err)
+    else:
+        test_err = np.sqrt(np.mean(np.square(preds - y_test.numpy())))
+        print("Test RMSE: ", test_err)
+
+    return test_err, M, obj_seq[0:i+2], terr_seq[0:i+2], err_seq[0:i+2], rank_seq[0:i+2]

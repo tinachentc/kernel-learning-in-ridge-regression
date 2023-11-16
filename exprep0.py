@@ -10,7 +10,7 @@ import pandas as pd
 import argparse
 
 #simulation
-def RGdata(n, d, e, rho, c, args, xdis, seed=1):
+def RGdata(n, d, e, rho, c, args, xdis, cl, seed=1):
     # noise
     np.random.seed(seed)
     u = e*np.random.normal(0, 1, size=n)
@@ -42,57 +42,76 @@ def RGdata(n, d, e, rho, c, args, xdis, seed=1):
     elif args == 5:
         y0 = 0
     y = y0 + u + c
+    if cl == 1:
+        y = (y > 0.5).astype(int)
     return torch.from_numpy(X).float(), torch.from_numpy(y.reshape(n, 1)).float()
 
 # function for each repetition
 def rep_each(argwrap):
-    seed, lam_seq0, ker, args, xdis, n, d, e, rho, c, iters, lr, alpha, beta = argwrap
+    seed, lam_seq0, ker, args, xdis, n, d, e, rho, c, iters, lr, alpha, beta, cl = argwrap
 
     lam_seq = lam_seq0.split(',')
     lam_seq = [float(val) for val in lam_seq]
     name = './' + 'sp_simulation' + str(args) + str(xdis) + '_' + str(ker) + '_seed' + str(seed) + '_n' + str(n) + '_d' +str(d) + '_e' +str(e) + '_r' +str(rho) + '_c' +str(c) + '_iter' +str(iters) + '_alpha' +str(alpha) + '_beta' +str(beta) + '_lr' +str(lr) + '_l' + str(lam_seq[0]) + '_' + str(lam_seq[-1])
+    if cl == 1:
+        name = name + '_cl'
 
     #simulation parameter
-    X_tr, y_tr = RGdata(n, d, e, rho, c, args, xdis, seed)
+    X_tr, y_tr = RGdata(n, d, e, rho, c, args, xdis, cl, seed)
     val = 0.5
     n_val = int(n * val)
-    X_val, y_val = RGdata(n_val, d, e, rho, c, args, xdis, seed * 10000)
+    X_val, y_val = RGdata(n_val, d, e, rho, c, args, xdis, cl, seed * 10000)
 
     #optimization parameters
     bs = len(y_tr)
 
-    sav = pd.DataFrame(columns=['lambda', 'rank', 'rank_seq', 'obj', 'tval', 'val', 'M'])
-    M = np.eye(d, dtype='float32') / d; d0 = d
+    sav = pd.DataFrame(columns=['testerr', 'lambda', 'rank', 'rank_seq', 'obj', 'tval', 'val', 'M'])
+
+    d0 = d
+    if ker == 'Gaudiag':
+        M = np.ones(d, dtype='float32') / d
+    else:
+        M = np.eye(d, dtype='float32') / d
     for i in range(len(lam_seq)):
         lam = lam_seq[i]
         reg = lam * bs
 
         #kernel option
         if ker == 'Gau':
-            M, obj_seq, tval_seq, val_seq, rank_seq = trainSig(X_tr, y_tr, X_val, y_val, M, d0,
+            terr, M, obj_seq, tval_seq, val_seq, rank_seq = trainSig(X_tr, y_tr, X_val, y_val, M, d0,
                                                                iters=iters, batch_size=bs, reg=reg, lr0=lr,
-                                                               alpha=alpha, beta=beta)
+                                                               alpha=alpha, beta=beta, classification=cl)
+
+        elif ker == 'Gaudiag':
+            terr, M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_diag(X_tr, y_tr, X_val, y_val, M, d0,
+                                                               iters=iters, batch_size=bs, reg=reg, lr0=lr,
+                                                               alpha=alpha, beta=beta, classification=cl)
+
         elif ker == 'IMQ':
-            M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_IMQ(X_tr, y_tr, X_val, y_val, M, d0,
+            terr, M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_IMQ(X_tr, y_tr, X_val, y_val, M, d0,
                                                                iters=iters, batch_size=bs, reg=reg, lr0=lr,
-                                                               alpha=alpha, beta=beta)
+                                                               alpha=alpha, beta=beta, classification=cl)
+
         elif ker == 'MT':
-            M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_MT(X_tr, y_tr, X_val, y_val, M, d0,
+            terr, M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_MT(X_tr, y_tr, X_val, y_val, M, d0,
                                                                iters=iters, batch_size=bs, reg=reg, lr0=lr,
-                                                               alpha=alpha, beta=beta)
+                                                               alpha=alpha, beta=beta, classification=cl)
+
         elif ker == 'linear':
-            M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_linear(X_tr, y_tr, X_val, y_val, M, d0,
+            terr, M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_linear(X_tr, y_tr, X_val, y_val, M, d0,
                                                                iters=iters, batch_size=bs, reg=reg, lr0=lr,
-                                                               alpha=alpha, beta=beta)
+                                                               alpha=alpha, beta=beta, classification=cl)
+
         elif ker == 'cubic':
-            M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_cubic(X_tr, y_tr, X_val, y_val, M, d0,
+            terr, M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_cubic(X_tr, y_tr, X_val, y_val, M, d0,
                                                                iters=iters, batch_size=bs, reg=reg, lr0=lr,
-                                                               alpha=alpha, beta=beta)
+                                                               alpha=alpha, beta=beta, classification=cl)
+
         ran = rank_seq[-1]
         obj = obj_seq[-1]
         tval = tval_seq[-1]
         val = val_seq[-1]
-        sav = pd.concat([sav, pd.DataFrame([{'lambda': lam, 'rank': ran, 'rank_seq': rank_seq, 'obj': obj, 'tval': tval, 'val': val, 'M': M}])], ignore_index=True)#sav = pd.concat([sav, pd.DataFrame([{'lambda': lam, 'rank': ran, 'M': M, 'obj_seq': obj_seq, 'tval_seq': tval_seq, 'val_seq': val_seq, 'rank_seq': rank_seq}])], ignore_index=True)
+        sav = pd.concat([sav, pd.DataFrame([{'testerr': terr, 'lambda': lam, 'rank': ran, 'rank_seq': rank_seq, 'obj': obj, 'tval': tval, 'val': val, 'M': M}])], ignore_index=True)#sav = pd.concat([sav, pd.DataFrame([{'lambda': lam, 'rank': ran, 'M': M, 'obj_seq': obj_seq, 'tval_seq': tval_seq, 'val_seq': val_seq, 'rank_seq': rank_seq}])], ignore_index=True)
         with open(name + '.pkl', 'wb') as f:
             pickle.dump(sav, f)
         d0 = ran
@@ -120,6 +139,8 @@ def parse_commandline():
     parser.add_argument("--lr", help="initial learning rate (type=float, default=0.1)", type=float, default=0.1)
     parser.add_argument("--alpha", help="Armijo alpha (type=float, default=0.001)", type=float, default=0.001)#0.01
     parser.add_argument("--beta", help="Armijo beta (type=float, default=0.5)", type=float, default=0.5)
+    # classification argument
+    parser.add_argument("--cl", help="whether a classification problem (1/0, default=0)", type=int, default=0)
     args = parser.parse_args()
     return args
 
@@ -141,6 +162,7 @@ iters = cmd.iter
 lr = cmd.lr
 alpha = cmd.alpha
 beta = cmd.beta
+cl = cmd.cl
 
 s = int(s)
-rep_each((s, lam_seq0, ker, args, xdis, n, d, e, rho, c, iters, lr, alpha, beta))
+rep_each((s, lam_seq0, ker, args, xdis, n, d, e, rho, c, iters, lr, alpha, beta, cl))
