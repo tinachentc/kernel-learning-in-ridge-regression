@@ -3,7 +3,6 @@
 import torch
 import numpy as np
 from trainSigArm_Gau import *
-from trainSigArm_transinv import *
 from trainSigArm_innerprod import *
 import pickle
 import pandas as pd
@@ -123,16 +122,6 @@ def main(argwrap, data=None):
                                                                iters=iters, batch_size=bs, reg=reg, lr0=lr,
                                                                alpha=alpha, beta=beta, tol=tol, X_val=X_val, y_val=y_val, classification=cl)
 
-        elif ker == 'IMQ':
-            terr, M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_IMQ(X_tr, y_tr, X_te, y_te, M, d0,
-                                                               iters=iters, batch_size=bs, reg=reg, lr0=lr,
-                                                               alpha=alpha, beta=beta, tol=tol, X_val=X_val, y_val=y_val, classification=cl)
-
-        elif ker == 'MT':
-            terr, M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_MT(X_tr, y_tr, X_te, y_te, M, d0,
-                                                               iters=iters, batch_size=bs, reg=reg, lr0=lr,
-                                                               alpha=alpha, beta=beta, tol=tol, X_val=X_val, y_val=y_val, classification=cl)
-
         elif ker == 'linear':
             terr, M, obj_seq, tval_seq, val_seq, rank_seq = trainSig_linear(X_tr, y_tr, X_te, y_te, M, d0,
                                                                iters=iters, batch_size=bs, reg=reg, lr0=lr,
@@ -161,7 +150,7 @@ def parse_commandline():
     parser.add_argument("--s", help="seed", default=1)
     # model arguments
     parser.add_argument("--l", help="lambda sequence using comma to separate (e.g 0.1,0.2,0.3)", type=str)
-    parser.add_argument("--ker", help="kernel (Gau/IMQ/MT/linear/cubic, default='Gau')", type=str, default='Gau')
+    parser.add_argument("--ker", help="kernel (Gau/Gaudiag/linear/cubic, default='Gau')", type=str, default='Gau')
     # data arguments
     parser.add_argument("--data", help="csv data path with last column y, using comma to separate train and test path (train,test/train,test,validate, default=None)", type=str, default=None)
     parser.add_argument("--args", help="simulation model number (1sum/2prod/3tanh/4uptocubic/5emp, default=3)", type=int, default=3)
