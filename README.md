@@ -2,13 +2,13 @@
 
 ## Introduction:
 We consider kernels parameterized by $\Sigma$
-$$(x,x') \rightarrow k_\Sigma(x, x')  = \phi(\norm{x-x'}_\Sigma^2)$$
+$$(x,x') \mapsto k_\Sigma(x, x')  = \phi(\left\|{x-x'}\right\|}_\Sigma^2)$$
 where $\norm{x-x'}_\Sigma = \sqrt{(x-x')^T \Sigma (x-x')}$, and $\phi$ is a real-valued function so that $k_\Sigma$ is a kernel for every positive semidefinite $\Sigma$. 
 An example is the Gaussian kernel where $\phi(z) = \exp(-z)$.
 
 We study a variant of kernel ridge regression where we also optimize the 
 reproducing kernel Hilbert space $\mathcal{H}_\Sigma$ whose kernel is given by $k_\Sigma$:
-$$	\mathop{minimize}_{f, \gamma, \Sigma} 
+$$	\mathop{\rm minimize}_{f, \gamma, \Sigma} 
 		~~~\half \mathbb{E}_n \left[(Y - f(X) - \gamma)^2\right] + \frac{\lambda}{2} \norm{f}_{\mathcal{H}_\Sigma}^2
 	~~~
 	\mathop{\rm subject\;to}  ~~~~\Sigma \succeq 0
