@@ -2,7 +2,7 @@
 
 ## Introduction:
 We consider kernels parameterized by $\Sigma$
-$$(x,x') \mapsto k_\Sigma(x, x')  = \phi(\left\|x-x'\right\|}_\Sigma)$$
+$$(x,x') \mapsto k_\Sigma(x, x')  = \phi(\left\|x-x'\right\|}_{\Sigma}^2)$$
 where $\norm{x-x'}_\Sigma = \sqrt{(x-x')^T \Sigma (x-x')}$, and $\phi$ is a real-valued function so that $k_\Sigma$ is a kernel for every positive semidefinite $\Sigma$. 
 An example is the Gaussian kernel where $\phi(z) = \exp(-z)$.
 
