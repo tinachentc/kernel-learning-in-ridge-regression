@@ -3,7 +3,7 @@
 ## Introduction:
 We consider kernels parameterized by $\Sigma$
 $$(x,x') \mapsto k_\Sigma(x, x')  = \phi(\Vert x-x'\Vert^2_\Sigma)$$
-where $\Vert x-x'\Vert^2_\Sigma = \sqrt{(x-x')^T \Sigma (x-x')}$, and $\phi$ is a real-valued function so that $k_\Sigma$ is a kernel for every positive semidefinite $\Sigma$. 
+where $\Vert x-x'\Vert_\Sigma = \sqrt{(x-x')^T \Sigma (x-x')}$, and $\phi$ is a real-valued function so that $k_\Sigma$ is a kernel for every positive semidefinite $\Sigma$. 
 An example is the Gaussian kernel where $\phi(z) = \exp(-z)$.
 
 We study a variant of kernel ridge regression where we also optimize the 
@@ -95,8 +95,8 @@ python3 exprep0.py --l 1,0.95,0.9,0.85,0.8,0.75,0.7,0.65,0.6,0.55,0.5,0.45,0.4,0
 - `--tol`: parameter for tolerance. Default: `--tol 0.001`.
 
 The optimization procedure is as follows. We derive an explicit formula for
-$J_n(\Sigma) = \mathop{\rm minimize}_{f, \gamma} \half \E_n [(Y - f(X)- \gamma)]^2 + \frac{\lambda}{2} \norm{f}_{\mathcal{H}_\Sigma}^2$
-and evaluate the gradient $\grad J_n(\Sigma)$. To then minimize $J_n(\Sigma)$ subject to $\Sigma \succeq 0$,
+$J_n(\Sigma) = \mathop{\rm minimize}\_{f, \gamma} \half \E_n [(Y - f(X)- \gamma)]^2 + \frac{\lambda}{2} \Vert f\Vert\_{\mathcal{H}\_\Sigma}^2$
+and evaluate the gradient $\nabla J_n(\Sigma)$. To then minimize $J_n(\Sigma)$ subject to $\Sigma \succeq 0$,
 we perform gradient descent with projection
 onto the semidefinite cone $\mathcal{C} = \{\Sigma: \Sigma \succeq 0\}$ per iteration, using the Armijo rule to search each 
 iteration's stepsize. We terminate gradient descent
