@@ -21,7 +21,7 @@ If you are interested in more details, please refer to our paper: [Kernel Learni
 - matplotlib==3.8.0
 - scikit-learn==1.2.2
 
-## Commands for reproducing figures in our paper (https://arxiv.org/abs/2310.11736):
+## Commands for reproducing figures in our paper:
 ```bash
 # see arguments --s for random seeds to reproduce the results in paper and other arguments for detailed information
 # Figures 1 and 2
