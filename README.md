@@ -70,11 +70,11 @@ python3 exprep0.py --l 1,0.95,0.9,0.85,0.8,0.75,0.7,0.65,0.6,0.55,0.5,0.45,0.4,0
 
 ## Arguments:
 1. Objective\
-   for using kernel learning on example data (or on your own data)
+   (1) for using kernel learning on example data (or on your own data)
    - `--data`: data path (built in: **csv** data paths with **header** and with **last column as y**, using comma to separate train and test path, i.e. train,test/train,test,validate). Default: None. \
    Notice: When this value is assigned, all the rest arguments for simulation data will be ignored!
 
-   for reproducing figures in the paper
+   (2) for reproducing figures in the paper
    - `--s`: random seed of simulation repetition (the experiments in our paper are repeated 100 times by applying `$SLURM_ARRAY_TASK_ID` to assign 1-100 of this argument). Default: `--s 1`.
    - `--n`: sample size. Default: `--n 300`.
    - `--d`: sample dimension. Default: `--d 50`.
