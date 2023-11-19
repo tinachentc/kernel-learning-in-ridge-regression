@@ -85,7 +85,7 @@ python3 exprep0.py --l 1,0.95,0.9,0.85,0.8,0.75,0.7,0.65,0.6,0.55,0.5,0.45,0.4,0
    - `--rho`: distribution of X parameter: correlation for `--xdis 1` and probability equals to one for `--xdis 3`. Default: `--rho 0.`
 
 2. Tuning parameters on the kernel learning model
-   - `--l`: lambda sequence using comma to separate (this argument affects warm start, recommend to use dense grids). E.g. `--l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1`.
+   - `--l`: ridge regularization parameter sequence using comma to separate (this argument affects warm start, recommend to use dense grids). E.g. `--l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1`.
    - `--ker`: kernel function (built in: Gau/Gaudiag/linear/cubic). Default: `--ker Gau`.
 
 3. Tuning parameters in the optimization procedure\
@@ -94,8 +94,8 @@ and evaluate the gradient $\nabla J_n(\Sigma)$. To then minimize $J_n(\Sigma)$ s
 we perform projected gradient descent per iteration, using the Armijo rule to search each 
 iteration's stepsize. We terminate gradient descent
 when the ratio between the difference of consecutive iterates, measured by the Frobenius norm, 
-and the stepsize is below the tolerance. The algorithm is always initialized at a diagonal matrix with diagonal 
-entry $1/p$.
+and the stepsize is below the tolerance or when the maximum iteration number is reached. The algorithm is initialized at a diagonal matrix with diagonal 
+entry $1/p$ for the first assigned ridge regularization parameter. For the following ridge regularization parameters, warm start is implemented to fasten the algorithm: the solution matrix of the previous ridge regularization parameter is used as the initialization of the current process. 
 
    - `--iter`: maximum iteration number. Default: `--iter 2000`.
    - `--lr`: initial learning rate per iteration. Default: `--lr 0.1`.
