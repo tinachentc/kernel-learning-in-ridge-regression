@@ -98,7 +98,7 @@ The optimization procedure is as follows. We derive an explicit formula for
 $J_n(\Sigma) = \mathop{\rm minimize}\_{f, \gamma} \frac{1}{2} \mathbb{E}_n [(Y - f(X)- \gamma)]^2 + \frac{\lambda}{2} \Vert f\Vert\_{\mathcal{H}\_\Sigma}^2$
 and evaluate the gradient $\nabla J_n(\Sigma)$. To then minimize $J_n(\Sigma)$ subject to $\Sigma \succeq 0$,
 we perform gradient descent with projection
-onto the semidefinite cone $\mathcal{C} = {\Sigma: \Sigma \succeq 0 }$ per iteration, using the Armijo rule to search each 
+onto the semidefinite cone $\mathcal{C} = \{\Sigma: \Sigma \succeq 0 \}$ per iteration, using the Armijo rule to search each 
 iteration's stepsize. We terminate gradient descent
 when the ratio between the difference of consecutive iterates, measured by the Frobenius norm, 
 and the stepsize is below the tolerance $\Delta > 0$. The algorithm is always initialized at a diagonal matrix with diagonal 
