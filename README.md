@@ -88,20 +88,21 @@ python3 exprep0.py --l 1,0.95,0.9,0.85,0.8,0.75,0.7,0.65,0.6,0.55,0.5,0.45,0.4,0
 - `--ker`: kernel function (built in: Gau/Gaudiag/linear/cubic). Default: `--ker Gau`.
 
 3. Tuning parameters in the optimization procedure
+  The optimization procedure is as follows. We derive an explicit formula for
+$J_n(\Sigma) = \mathop{\rm minimize}\_{f, \gamma} \frac{1}{2} \mathbb{E}_n [(Y - f(X)- \gamma)]^2 + \frac{\lambda}{2} \Vert f\Vert\_{\mathcal{H}\_\Sigma}^2$
+and evaluate the gradient $\nabla J_n(\Sigma)$. To then minimize $J_n(\Sigma)$ subject to $\Sigma \succeq 0$,
+we perform projected gradient descent per iteration, using the Armijo rule to search each 
+iteration's stepsize. We terminate gradient descent
+when the ratio between the difference of consecutive iterates, measured by the Frobenius norm, 
+and the stepsize is below the tolerance. The algorithm is always initialized at a diagonal matrix with diagonal 
+entry $1/p$.
+
 - `--iter`: maximum iteration number. Default: `--iter 2000`.
 - `--lr`: initial learning rate per iteration. Default: `--lr 0.1`.
 - `--alpha`: parameter for Armijo rule. Default: `--alpha 0.001`.
 - `--beta`: parameter for Armijo rule. Default: `--beta 0.5`.
 - `--tol`: parameter for tolerance. Default: `--tol 0.001`.
 
-The optimization procedure is as follows. We derive an explicit formula for
-$J_n(\Sigma) = \mathop{\rm minimize}\_{f, \gamma} \frac{1}{2} \mathbb{E}_n [(Y - f(X)- \gamma)]^2 + \frac{\lambda}{2} \Vert f\Vert\_{\mathcal{H}\_\Sigma}^2$
-and evaluate the gradient $\nabla J_n(\Sigma)$. To then minimize $J_n(\Sigma)$ subject to $\Sigma \succeq 0$,
-we perform projected gradient descent per iteration, using the Armijo rule to search each 
-iteration's stepsize. We terminate gradient descent
-when the ratio between the difference of consecutive iterates, measured by the Frobenius norm, 
-and the stepsize is below the tolerance $\Delta > 0$. The algorithm is always initialized at a diagonal matrix with diagonal 
-entry $1/p$.
 
 
 ## Attribution:
