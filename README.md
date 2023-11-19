@@ -2,13 +2,13 @@
 
 ## Introduction:
 We consider kernels parameterized by $\Sigma$
-$$(x,x') \mapsto k_\Sigma(x, x')  = \phi(\norm{x-x'}_\Sigma^2)$$
+$$(x,x') \rightarrow k_\Sigma(x, x')  = \phi(\norm{x-x'}_\Sigma^2)$$
 where $\norm{x-x'}_\Sigma = \sqrt{(x-x')^T \Sigma (x-x')}$, and $\phi$ is a real-valued function so that $k_\Sigma$ is a kernel for every positive semidefinite $\Sigma$. 
 An example is the Gaussian kernel where $\phi(z) = \exp(-z)$.
 
 We study a variant of kernel ridge regression where we also optimize the 
 reproducing kernel Hilbert space $\mathcal{H}_\Sigma$ whose kernel is given by $k_\Sigma$:
-$$	\mathop{\rm minimize}_{f, \gamma, \Sigma} 
+$$	\mathop{minimize}_{f, \gamma, \Sigma} 
 		~~~\half \mathbb{E}_n \left[(Y - f(X) - \gamma)^2\right] + \frac{\lambda}{2} \norm{f}_{\mathcal{H}_\Sigma}^2
 	~~~
 	\mathop{\rm subject\;to}  ~~~~\Sigma \succeq 0
@@ -25,7 +25,7 @@ If you are interested in more details, please refer to our paper: [Kernel Learni
 - matplotlib==3.8.0
 - scikit-learn==1.2.2
 
-## Commands for reproducing figures in our paper (https://arxiv.org/abs/2310.11736).
+## Commands for reproducing figures in our paper (https://arxiv.org/abs/2310.11736):
 ```bash
 # see arguments --s for random seeds to reproduce the results in paper and other arguments for detailed information
 # Figures 1 and 2
