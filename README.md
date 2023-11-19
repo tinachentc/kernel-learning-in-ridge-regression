@@ -70,25 +70,25 @@ python3 exprep0.py --l 1,0.95,0.9,0.85,0.8,0.75,0.7,0.65,0.6,0.55,0.5,0.45,0.4,0
 
 ## Arguments:
 1. Objective
-- for using kernel learning on example data (or on your own data)
-   - `--data`: data path (built in: **csv** data paths with **header** and with **last column as y**, using comma to separate train and test path, i.e. train,test/train,test,validate). Default: None. \
-      Notice: When this value is assigned, all the rest arguments for simulation data will be ignored!
+   - for using kernel learning on example data (or on your own data)
+      - `--data`: data path (built in: **csv** data paths with **header** and with **last column as y**, using comma to separate train and test path, i.e. train,test/train,test,validate). Default: None. \
+         Notice: When this value is assigned, all the rest arguments for simulation data will be ignored!
 
-- for reproducing figures in the paper
-   - `--s`: random seed of simulation repetition (the experiments in our paper are repeated 100 times by applying `$SLURM_ARRAY_TASK_ID` to assign 1-100 of this argument). Default: `--s 1`.
-   - `--n`: sample size. Default: `--n 300`.
-   - `--d`: sample dimension. Default: `--d 50`.
-   - `--e`: noise size. Default: `--e 0.1`.
-   - `--args`: function index in paper (built in: 1/2/3/4/5, see Section 7.1 function f in the paper). Default: `--args 3`.
-   - `--xdis`: distribution of X index in paper (built in: 1/2/3, which indicates Gau/Unif/Ber respectively). Default: `--xdis 1`.
-   - `--rho`: distribution of X parameter: correlation for `--xdis 1` and probability equals to one for `--xdis 3`. Default: `--rho 0.`
+   - for reproducing figures in the paper
+      - `--s`: random seed of simulation repetition (the experiments in our paper are repeated 100 times by applying `$SLURM_ARRAY_TASK_ID` to assign 1-100 of this argument). Default: `--s 1`.
+      - `--n`: sample size. Default: `--n 300`.
+      - `--d`: sample dimension. Default: `--d 50`.
+      - `--e`: noise size. Default: `--e 0.1`.
+      - `--args`: function index in paper (built in: 1/2/3/4/5, see Section 7.1 function f in the paper). Default: `--args 3`.
+      - `--xdis`: distribution of X index in paper (built in: 1/2/3, which indicates Gau/Unif/Ber respectively). Default: `--xdis 1`.
+      - `--rho`: distribution of X parameter: correlation for `--xdis 1` and probability equals to one for `--xdis 3`. Default: `--rho 0.`
 
 2. Tuning parameters on the kernel learning model
-- `--l`: lambda sequence using comma to separate (this argument affects warm start, recommend to use dense grids). E.g. `--l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1`.
-- `--ker`: kernel function (built in: Gau/Gaudiag/linear/cubic). Default: `--ker Gau`.
+   - `--l`: lambda sequence using comma to separate (this argument affects warm start, recommend to use dense grids). E.g. `--l 0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1`.
+   - `--ker`: kernel function (built in: Gau/Gaudiag/linear/cubic). Default: `--ker Gau`.
 
 3. Tuning parameters in the optimization procedure\
-  \ \ The optimization procedure is as follows. We derive an explicit formula for
+  The optimization procedure is as follows. We derive an explicit formula for
 $J_n(\Sigma) = \mathop{\rm minimize}\_{f, \gamma} \frac{1}{2} \mathbb{E}_n [(Y - f(X)- \gamma)]^2 + \frac{\lambda}{2} \Vert f\Vert\_{\mathcal{H}\_\Sigma}^2$
 and evaluate the gradient $\nabla J_n(\Sigma)$. To then minimize $J_n(\Sigma)$ subject to $\Sigma \succeq 0$,
 we perform projected gradient descent per iteration, using the Armijo rule to search each 
@@ -97,11 +97,11 @@ when the ratio between the difference of consecutive iterates, measured by the F
 and the stepsize is below the tolerance. The algorithm is always initialized at a diagonal matrix with diagonal 
 entry $1/p$.
 
-- `--iter`: maximum iteration number. Default: `--iter 2000`.
-- `--lr`: initial learning rate per iteration. Default: `--lr 0.1`.
-- `--alpha`: parameter for Armijo rule. Default: `--alpha 0.001`.
-- `--beta`: parameter for Armijo rule. Default: `--beta 0.5`.
-- `--tol`: parameter for tolerance. Default: `--tol 0.001`.
+   - `--iter`: maximum iteration number. Default: `--iter 2000`.
+   - `--lr`: initial learning rate per iteration. Default: `--lr 0.1`.
+   - `--alpha`: parameter for Armijo rule. Default: `--alpha 0.001`.
+   - `--beta`: parameter for Armijo rule. Default: `--beta 0.5`.
+   - `--tol`: parameter for tolerance. Default: `--tol 0.001`.
 
 
 
