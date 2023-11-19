@@ -10,7 +10,8 @@ We study a variant of kernel ridge regression where we also optimize the
 reproducing kernel Hilbert space $\mathcal{H}\_\Sigma$ whose kernel is given by $k_\Sigma$:
 $$\mathop{\rm minimize}\_{f, \gamma, \Sigma} ~~~\frac{1}{2} \mathbb{E}\_n \left[(Y - f(X) - \gamma)^2\right] + \frac{\lambda}{2} \Vert f\Vert \_{\mathcal{H}\_\Sigma}^2 ~~~ \mathop{\rm subject\ to}  ~~~~\Sigma \succeq 0 $$
 
-If you are interested in more details, please refer to our paper: [Kernel Learning in Ridge Regression “Automatically” Yields Exact Low Rank Solution](https://arxiv.org/abs/2310.11736).
+If you are interested in more details, please refer to our paper:\
+[Kernel Learning in Ridge Regression “Automatically” Yields Exact Low Rank Solution](https://arxiv.org/abs/2310.11736).
 
 ## Python Environment:
 - python 3.9
