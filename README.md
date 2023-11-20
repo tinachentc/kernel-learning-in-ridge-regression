@@ -10,7 +10,7 @@ An example is the Gaussian kernel where $\phi(z) = \exp(-z)$.
 Analyzing the eigenspace of $\Sigma$ helps identify key predictive directions in the covariate space. 
 Typically, the returned $\Sigma$ is low rank, facilitating dimension reduction and improving the model’s ability to generalize. 
 
-For more details, please refer to our paper:\
+For more details, please refer to our paper: 
 [Kernel Learning in Ridge Regression “Automatically” Yields Exact Low Rank Solution](https://arxiv.org/abs/2310.11736).
 
 ## Python Environment:
