@@ -1,16 +1,16 @@
 # Kernel Learning in Ridge Regression
 
 ## Introduction:
-We consider kernels parameterized by $\Sigma$
+The provided codes implement a variant of kernel ridge regression, where the prediction function and a positive definite matrix parameter $\Sigma$ of the reproducing kernel Hilbert space (RKHS) are optimized simultaneously: 
+$$\mathop{\rm minimize}\_{f, \gamma, \Sigma} ~~~\frac{1}{2} \mathbb{E}\_n \left[(Y - f(X) - \gamma)^2\right] + \frac{\lambda}{2} \Vert f\Vert \_{\mathcal{H}\_\Sigma}^2 ~~~ \mathop{\rm subject\ to}  ~~~~\Sigma \succeq 0. $$
+This RKHS, denoted as $\mathcal{H}\_\Sigma$, utilizes a kernel
 $$(x,x') \mapsto k_\Sigma(x, x')  = \phi(\Vert x-x'\Vert^2_\Sigma)$$
 where $\Vert x-x'\Vert_\Sigma = \sqrt{(x-x')^T \Sigma (x-x')}$, and $\phi$ is a real-valued function so that $k_\Sigma$ is a kernel for every positive semidefinite $\Sigma$. 
 An example is the Gaussian kernel where $\phi(z) = \exp(-z)$.
+Analyzing the eigenspace of $\Sigma$ helps identify key predictive directions in the covariate space. 
+Typically, the returned $\Sigma$ is low rank, facilitating dimension reduction and improving the model’s ability to generalize. 
 
-We study a variant of kernel ridge regression where we also optimize the 
-reproducing kernel Hilbert space $\mathcal{H}\_\Sigma$ whose kernel is given by $k_\Sigma$:
-$$\mathop{\rm minimize}\_{f, \gamma, \Sigma} ~~~\frac{1}{2} \mathbb{E}\_n \left[(Y - f(X) - \gamma)^2\right] + \frac{\lambda}{2} \Vert f\Vert \_{\mathcal{H}\_\Sigma}^2 ~~~ \mathop{\rm subject\ to}  ~~~~\Sigma \succeq 0 $$
-
-If you are interested in more details, please refer to our paper:\
+For more details, please refer to our paper:\
 [Kernel Learning in Ridge Regression “Automatically” Yields Exact Low Rank Solution](https://arxiv.org/abs/2310.11736).
 
 ## Python Environment:
