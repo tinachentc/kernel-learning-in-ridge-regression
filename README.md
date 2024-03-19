@@ -29,8 +29,8 @@ For a short example which is executable on Google Colab (without accessing GPU r
 
 - For using kernel learning on your own data:\
   Two options are provided:
-   - training and testing data are provided: use argument `--data train path,test path`
-   - training, validation and testing data are provided: use argument `--data train path,test path,validate path`
+   - training and testing data: use argument `--data train path,test path`
+   - training, validation and testing data: use argument `--data train path,test path,validate path`
 
   See folder `example simulated data` for example data and commands.
 
