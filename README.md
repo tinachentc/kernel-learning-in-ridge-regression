@@ -25,14 +25,12 @@ For a short example which is executable on Google Colab (without accessing GPU r
 - scikit-learn==1.2.2
 
 ## Pipeline:
-- For reproducing figures in our paper:\
-See folder `reproducing commands`.
+- For reproducing figures in our paper: See folder `reproducing commands`.
 
-- For using kernel learning on the example data (or on your own data):\
+- For using kernel learning on the example data (or on your own data): See folder `example simulated data`.
 Two options are provided:
    - training and testing data are provided: use argument `--data train path,test path`
-   - training, validation and testing data are provided: use argument `--data train path,test path,validate path`\
-See folder `example simulated data`.
+   - training, validation and testing data are provided: use argument `--data train path,test path,validate path`
 
 <!-- ## Commands for reproducing figures in our paper:
 ```bash
