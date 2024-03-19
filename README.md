@@ -31,7 +31,7 @@ For a short example which is executable on Google Colab (without accessing GPU r
   Two options are provided:
    - training and testing data are provided: use argument `--data train path,test path`
    - training, validation and testing data are provided: use argument `--data train path,test path,validate path`\
-  See folder `example simulated data` for example data and commands.
+See folder `example simulated data` for example data and commands.
 
 <!-- ## Commands for reproducing figures in our paper:
 ```bash
