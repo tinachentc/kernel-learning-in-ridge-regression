@@ -27,7 +27,7 @@ For a short example which is executable on Google Colab (without accessing GPU r
 ## Pipeline:
 - For reproducing figures in our paper: See folder `reproducing commands`.
 
-- For using kernel learning on the example data (or on your own data): See folder `example simulated data`.
+- For using kernel learning on the example data (or on your own data): See folder `example simulated data`.\
 Two options are provided:
    - training and testing data are provided: use argument `--data train path,test path`
    - training, validation and testing data are provided: use argument `--data train path,test path,validate path`
